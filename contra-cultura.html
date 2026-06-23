@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contra Cultura — Felipe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --noite: #1A1A2E;
+    --papel: #E8D5B0;
+    --papel-escuro: #D4BC92;
+    --vermelho: #C0392B;
+    --verde: #27AE60;
+    --ouro: #8B6914;
+    --azul: #2980B9;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--noite); color: var(--papel); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(26,26,46,0.96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(139,105,20,0.3);
+  }
+  .nav-logo { font-family: 'Courier Prime', monospace; font-size: 0.85rem; color: var(--ouro); letter-spacing: 0.2em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { font-size: 0.72rem; color: var(--papel-escuro); text-decoration: none; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--vermelho); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139,105,20,0.04) 2px, rgba(139,105,20,0.04) 4px);
+    pointer-events: none;
+  }
+  .hero-eyebrow { font-family: 'Courier Prime', monospace; font-size: 0.8rem; color: var(--vermelho); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1.5rem; }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 900; line-height: 0.9; color: var(--papel); margin-bottom: 0.5rem; }
+  .hero-title span { color: var(--vermelho); font-style: italic; }
+  .hero-subtitle { font-family: 'Playfair Display', serif; font-size: clamp(1rem, 2.5vw, 1.4rem); font-weight: 700; font-style: italic; color: var(--ouro); margin: 1.5rem 0; }
+  .hero-desc { max-width: 540px; font-size: 0.95rem; color: var(--papel-escuro); line-height: 1.7; margin-bottom: 3rem; }
+  .scroll-hint { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; font-family: 'Courier Prime', monospace; font-size: 0.7rem; letter-spacing: 0.2em; color: var(--ouro); text-transform: uppercase; animation: bounce 2s infinite; }
+  .scroll-hint::after { content: '↓'; font-size: 1.2rem; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+  /* MARQUEE */
+  .manifesto-strip { background: var(--vermelho); padding: 0.9rem 2rem; overflow: hidden; white-space: nowrap; }
+  .manifesto-text { display: inline-block; font-family: 'Courier Prime', monospace; font-size: 0.85rem; letter-spacing: 0.15em; color: var(--papel); animation: marquee 35s linear infinite; }
+  @keyframes marquee { from{transform:translateX(100vw)} to{transform:translateX(-100%)} }
+
+  /* LAYOUT */
+  .section-wrapper { border-top: 1px solid rgba(139,105,20,0.2); }
+  section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .chapter-tag { font-family: 'Courier Prime', monospace; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--vermelho); margin-bottom: 0.8rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; color: var(--papel); line-height: 1.15; margin-bottom: 0.5rem; }
+  .section-authors { font-family: 'Courier Prime', monospace; font-size: 0.78rem; color: var(--ouro); letter-spacing: 0.1em; margin-bottom: 2rem; }
+  .section-body { font-size: 0.97rem; line-height: 1.85; color: var(--papel-escuro); max-width: 760px; }
+  .section-body p { margin-bottom: 1.2rem; }
+  .section-body strong { color: var(--papel); font-weight: 600; }
+
+  .quote-block { border-left: 3px solid var(--vermelho); padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.07); }
+  .quote-block p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem; color: var(--papel); line-height: 1.6; margin-bottom: 0.5rem !important; }
+  .quote-block cite { font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: var(--ouro); letter-spacing: 0.1em; }
+
+  /* MÚSICA BLOCO */
+  .musica-bloco { margin: 3rem 0; border: 1px solid rgba(139,105,20,0.25); background: rgba(232,213,176,0.03); }
+  .musica-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(139,105,20,0.2); display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .musica-icone { width: 38px; height: 38px; background: var(--vermelho); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .musica-titulo { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--papel); margin-bottom: 0.2rem; }
+  .musica-meta { font-family: 'Courier Prime', monospace; font-size: 0.72rem; color: var(--ouro); letter-spacing: 0.1em; }
+  .musica-corpo { display: grid; grid-template-columns: 1fr 1fr; }
+  .musica-video { padding: 1.5rem; border-right: 1px solid rgba(139,105,20,0.2); }
+  .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background: #000; margin-bottom: 1rem; }
+  .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+  .video-label { font-family: 'Courier Prime', monospace; font-size: 0.68rem; color: var(--ouro); letter-spacing: 0.15em; text-transform: uppercase; }
+  .musica-analise { padding: 1.5rem; }
+  .analise-label { font-family: 'Courier Prime', monospace; font-size: 0.68rem; color: var(--vermelho); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; }
+  .trecho-letra { font-family: 'Courier Prime', monospace; font-style: italic; font-size: 0.82rem; line-height: 1.7; color: var(--papel); background: rgba(139,105,20,0.08); padding: 0.8rem 1rem; border-left: 2px solid var(--ouro); margin-bottom: 1rem; }
+  .analise-texto { font-size: 0.88rem; line-height: 1.75; color: var(--papel-escuro); }
+  .analise-texto p { margin-bottom: 0.9rem; }
+  .analise-texto strong { color: var(--papel); }
+
+  /* DEBATE */
+  .debate-table { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 2.5rem 0; border: 1px solid rgba(139,105,20,0.25); }
+  .debate-col { padding: 2rem; }
+  .debate-col:first-child { border-right: 1px solid rgba(139,105,20,0.25); background: rgba(192,57,43,0.06); }
+  .debate-col:last-child { background: rgba(39,174,96,0.04); }
+  .debate-header { font-family: 'Courier Prime', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid rgba(139,105,20,0.2); }
+  .debate-col:first-child .debate-header { color: var(--vermelho); }
+  .debate-col:last-child .debate-header { color: var(--verde); }
+  .debate-item { font-size: 0.88rem; color: var(--papel-escuro); line-height: 1.65; margin-bottom: 1rem; }
+  .debate-item::before { content: '— '; color: var(--ouro); }
+
+  /* ══ EXERCÍCIOS ══ */
+  .exercicios-wrap { margin-top: 4rem; }
+  .ex-titulo-bloco {
+    font-family: 'Courier Prime', monospace; font-size: 0.7rem;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--azul);
+    margin-bottom: 1.5rem; padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(41,128,185,0.25);
+  }
+  .exercicio {
+    background: rgba(41,128,185,0.05); border: 1px solid rgba(41,128,185,0.2);
+    padding: 1.5rem; margin-bottom: 1.2rem;
+  }
+  .ex-num {
+    font-family: 'Courier Prime', monospace; font-size: 0.68rem;
+    color: var(--azul); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.6rem;
+  }
+  .ex-pergunta { font-size: 0.95rem; color: var(--papel); line-height: 1.6; margin-bottom: 1rem; font-weight: 500; }
+  .ex-opcoes { display: flex; flex-direction: column; gap: 0.5rem; }
+  .opcao {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    padding: 0.7rem 1rem; border: 1px solid rgba(139,105,20,0.2);
+    cursor: pointer; transition: all 0.2s; font-size: 0.88rem;
+    color: var(--papel-escuro); line-height: 1.5; background: rgba(232,213,176,0.03);
+    border-radius: 2px; user-select: none;
+  }
+  .opcao:hover { border-color: var(--azul); background: rgba(41,128,185,0.07); color: var(--papel); }
+  .opcao.correta { border-color: var(--verde) !important; background: rgba(39,174,96,0.1) !important; color: var(--papel) !important; }
+  .opcao.errada { border-color: var(--vermelho) !important; background: rgba(192,57,43,0.1) !important; color: var(--papel-escuro) !important; }
+  .opcao.desabilitada { pointer-events: none; opacity: 0.6; }
+  .opcao.desabilitada.correta { opacity: 1; }
+  .opcao-letra {
+    font-family: 'Courier Prime', monospace; font-size: 0.75rem; font-weight: 700;
+    color: var(--ouro); flex-shrink: 0; margin-top: 0.05rem;
+  }
+  .ex-feedback {
+    margin-top: 0.8rem; padding: 0.8rem 1rem;
+    font-size: 0.85rem; line-height: 1.6; display: none; border-radius: 2px;
+  }
+  .ex-feedback.visivel { display: block; }
+  .ex-feedback.acerto { background: rgba(39,174,96,0.1); border-left: 3px solid var(--verde); color: var(--papel); }
+  .ex-feedback.erro { background: rgba(192,57,43,0.1); border-left: 3px solid var(--vermelho); color: var(--papel); }
+  .ex-feedback strong { color: inherit; }
+
+  /* DISSERTATIVA */
+  .ex-dissertativa textarea {
+    width: 100%; min-height: 110px; background: rgba(232,213,176,0.05);
+    border: 1px solid rgba(139,105,20,0.25); color: var(--papel);
+    font-family: 'Inter', sans-serif; font-size: 0.88rem; line-height: 1.65;
+    padding: 0.8rem 1rem; resize: vertical; outline: none;
+    transition: border-color 0.2s;
+  }
+  .ex-dissertativa textarea:focus { border-color: var(--azul); }
+  .ex-dissertativa textarea::placeholder { color: rgba(212,188,146,0.4); }
+  .btn-gabarito {
+    margin-top: 0.7rem; padding: 0.55rem 1.2rem;
+    background: transparent; border: 1px solid var(--azul);
+    color: var(--azul); font-family: 'Courier Prime', monospace;
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-gabarito:hover { background: var(--azul); color: var(--papel); }
+  .gabarito-texto { margin-top: 0.8rem; padding: 0.9rem 1rem; background: rgba(41,128,185,0.08); border-left: 3px solid var(--azul); font-size: 0.85rem; line-height: 1.65; color: var(--papel-escuro); display: none; }
+  .gabarito-texto.visivel { display: block; }
+  .gabarito-texto strong { color: var(--papel); }
+
+  /* PLACAR */
+  .placar-wrap {
+    margin-top: 3rem; padding: 2rem; border: 1px solid rgba(139,105,20,0.25);
+    background: rgba(232,213,176,0.03); display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: gap;
+  }
+  .placar-info h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--papel); margin-bottom: 0.3rem; }
+  .placar-info p { font-family: 'Courier Prime', monospace; font-size: 0.78rem; color: var(--ouro); }
+  .placar-numero { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: var(--vermelho); line-height: 1; }
+  .btn-resetar {
+    padding: 0.6rem 1.3rem; background: transparent; border: 1px solid rgba(139,105,20,0.3);
+    color: var(--papel-escuro); font-family: 'Courier Prime', monospace;
+    font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-resetar:hover { border-color: var(--vermelho); color: var(--vermelho); }
+
+  .torn-divider { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--ouro), transparent); opacity: 0.3; }
+
+  footer { background: #0F0F1F; border-top: 1px solid rgba(139,105,20,0.2); padding: 2.5rem; text-align: center; }
+  footer .footer-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-style: italic; color: var(--ouro); margin-bottom: 0.5rem; }
+  footer p { font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: rgba(232,213,176,0.4); letter-spacing: 0.1em; }
+
+  @media (max-width: 768px) {
+    .musica-corpo { grid-template-columns: 1fr; }
+    .musica-video { border-right: none; border-bottom: 1px solid rgba(139,105,20,0.2); }
+    .debate-table { grid-template-columns: 1fr; }
+    .debate-col:first-child { border-right: none; border-bottom: 1px solid rgba(139,105,20,0.25); }
+    nav { padding: 0.8rem 1.2rem; }
+    .nav-links { display: none; }
+    .placar-wrap { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) { .manifesto-text, .scroll-hint { animation: none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Contra Cultura — Felipe</span>
+  <ul class="nav-links">
+    <li><a href="#chico">Chico Buarque</a></li>
+    <li><a href="#ex-chico">Exercícios I</a></li>
+    <li><a href="#cazuza">Cazuza</a></li>
+    <li><a href="#ex-cazuza">Exercícios II</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <p class="hero-eyebrow">Projeto — Felipe</p>
+  <h1 class="hero-title">Contra<br><span>Cultura</span></h1>
+  <p class="hero-subtitle">Antologia Poética e Cultural Brasileira</p>
+  <p class="hero-desc">Uma travessia pela resistência artística: da poesia cifrada de Chico Buarque ao rock ácido de Cazuza — vozes que transformaram dor em manifesto e verso em arma.</p>
+  <span class="scroll-hint">Explorar</span>
+</header>
+
+<div class="manifesto-strip">
+  <span class="manifesto-text">Chico Buarque · Apesar de Você · Construção · Cálice · Cazuza · Burguesia · Blues da Piedade · Resistência · Ditadura · Poesia · Contra Cultura · Felipe ·</span>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CAPÍTULO I — CHICO BUARQUE
+══════════════════════════════════════════ -->
+<div class="section-wrapper" id="chico">
+<section>
+  <p class="chapter-tag">Capítulo I</p>
+  <h2 class="section-title">A Poesia de Chico Buarque<br>como Posição</h2>
+  <p class="section-authors">Autor: Felipe</p>
+  <div class="section-body">
+    <p>Chico Buarque de Holanda não escreve músicas — ele escreve <strong>posições</strong>. Cada verso é uma escolha política disfarçada de metáfora, uma crítica social embrulhada em melodia para escapar da tesoura da censura. Sua obra é uma antologia viva da contradição brasileira: o lirismo que sangra, o amor que protesta.</p>
+    <p>Em tempos de ditadura, a linguagem poética foi sua metralhadora. Palavras como "apesar de você", "amanhã" e "vai passar" eram ao mesmo tempo promessas e acusações — dirigidas diretamente ao poder que tentava calar. A antologia aqui proposta trata cada canção como texto literário, submetendo-a à análise crítica sem perder seu sopro musical.</p>
+  </div>
+
+  <!-- APESAR DE VOCÊ -->
+  <div class="musica-bloco">
+    <div class="musica-header">
+      <div class="musica-icone">♪</div>
+      <div class="musica-info">
+        <div class="musica-titulo">Apesar de Você</div>
+        <div class="musica-meta">Chico Buarque · 1970</div>
+      </div>
+    </div>
+    <div class="musica-corpo">
+      <div class="musica-video">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/o3BmQ0P7bMI" allowfullscreen loading="lazy" title="Apesar de Você"></iframe>
+        </div>
+        <p class="video-label">▶ Assistir no YouTube</p>
+      </div>
+      <div class="musica-analise">
+        <p class="analise-label">✦ Análise da Letra</p>
+        <div class="trecho-letra">"Hoje você é quem manda,<br>falou, tá falado, não tem discussão.<br>A minha gente hoje anda<br>falando de lado e olhando pro chão."</div>
+        <div class="analise-texto">
+          <p>Gravada em 1970, foi liberada pela censura que não percebeu o duplo sentido. O "você" do título é ao mesmo tempo um amante autoritário e a própria ditadura militar.</p>
+          <p><strong>Duplo sentido:</strong> "Falou, tá falado, não tem discussão" reproduz literalmente a lógica do autoritarismo: a supressão do debate. O regime é tratado como um indivíduo, o que o humaniza para criticá-lo com mais precisão.</p>
+          <p><strong>A virada esperançosa:</strong> O refrão projeta um amanhã onde o opressor se humilhará — "você vai se dar mal". É profecia e resistência psicológica coletiva ao mesmo tempo.</p>
+          <p><strong>Desfecho histórico:</strong> Quando os censores perceberam, a música já era um sucesso. A proibição veio tarde demais — o verso havia vacinado a memória popular.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONSTRUÇÃO -->
+  <div class="musica-bloco">
+    <div class="musica-header">
+      <div class="musica-icone">♪</div>
+      <div class="musica-info">
+        <div class="musica-titulo">Construção</div>
+        <div class="musica-meta">Chico Buarque · 1971 · Álbum: Construção</div>
+      </div>
+    </div>
+    <div class="musica-corpo">
+      <div class="musica-video">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/KRmBXUGAiE0" allowfullscreen loading="lazy" title="Construção - Chico Buarque"></iframe>
+        </div>
+        <p class="video-label">▶ Assistir no YouTube</p>
+      </div>
+      <div class="musica-analise">
+        <p class="analise-label">✦ Análise da Letra</p>
+        <div class="trecho-letra">"Comeu feijão com arroz<br>como se fosse um príncipe,<br>Bebeu e soluçou<br>como se fosse um náufrago."</div>
+        <div class="analise-texto">
+          <p>Considerada uma das maiores composições da MPB, "Construção" é um experimento formal radical: todas as estrofes terminam com oxítonos que <strong>não rimam com o sentido esperado</strong> — criando um efeito de deslocamento, de vida fora do lugar.</p>
+          <p><strong>O operário como protagonista épico:</strong> Chico devolve dignidade narrativa ao trabalhador anônimo. O homem não é estatística — é sujeito de sua própria tragédia. O Brasil do "milagre econômico" devorava corpos de operários.</p>
+          <p><strong>A repetição como denúncia:</strong> A letra se repete três vezes com variações, mas o destino é sempre o mesmo: a queda, a morte. É a mecanização da vida — repetir até morrer, morrer no trabalho.</p>
+          <p><strong>Detalhe técnico:</strong> Os adjetivos mudam a cada estrofe, mas os verbos e substantivos permanecem — simulando a intercambialidade do trabalhador no capitalismo industrial.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CÁLICE -->
+  <div class="musica-bloco">
+    <div class="musica-header">
+      <div class="musica-icone">♪</div>
+      <div class="musica-info">
+        <div class="musica-titulo">Cálice</div>
+        <div class="musica-meta">Chico Buarque &amp; Gilberto Gil · 1973/1978</div>
+      </div>
+    </div>
+    <div class="musica-corpo">
+      <div class="musica-video">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/nOVFLp4VvP8" allowfullscreen loading="lazy" title="Cálice - Chico Buarque"></iframe>
+        </div>
+        <p class="video-label">▶ Assistir no YouTube</p>
+      </div>
+      <div class="musica-analise">
+        <p class="analise-label">✦ Análise da Letra</p>
+        <div class="trecho-letra">"Pai, afasta de mim esse cálice<br>de vinho tinto de sangue."</div>
+        <div class="analise-texto">
+          <p>Escrita em 1973 e proibida imediatamente, só foi lançada em 1978. É talvez o maior exemplo de <strong>duplo sentido como estratégia de resistência</strong> na história da MPB.</p>
+          <p><strong>O jogo homofônico:</strong> "Cálice" soa idêntico a "cale-se" — o imperativo que a ditadura impunha. A referência bíblica à oração de Jesus no Getsêmani funciona como escudo e acusação simultâneos: o regime não podia proibir uma citação das Escrituras.</p>
+          <p><strong>"Vinho tinto de sangue":</strong> A eucaristia vira metáfora de violência estatal. O sangue derramado pela repressão é nomeado pelo ritual religioso — uma sacralização da denúncia que tornava qualquer censura um sacrilégio.</p>
+          <p><strong>Inventário do silêncio:</strong> Cada estrofe nomeia um tipo diferente de calar — o silêncio forçado, o da cumplicidade, o do medo. A música é, paradoxalmente, um catálogo do que não se podia dizer.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+<div class="torn-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     EXERCÍCIOS — CHICO BUARQUE
+══════════════════════════════════════════ -->
+<div class="section-wrapper" id="ex-chico">
+<section>
+  <p class="chapter-tag">Exercícios — Capítulo I</p>
+  <h2 class="section-title">Questões sobre<br>Chico Buarque</h2>
+  <p class="section-authors">Teste seus conhecimentos</p>
+
+  <div class="exercicios-wrap">
+    <p class="ex-titulo-bloco">✎ Questões de Múltipla Escolha</p>
+
+    <!-- Q1 -->
+    <div class="exercicio">
+      <p class="ex-num">Questão 01</p>
+      <p class="ex-pergunta">Em "Apesar de Você" (1970), o pronome "você" na letra da música funciona como um recurso de duplo sentido. Assinale a alternativa que melhor explica essa estratégia:</p>
+      <div class="ex-opcoes">
+        <div class="opcao" onclick="responder(this, false, 'q1')" data-q="q1"><span class="opcao-letra">A)</span> O "você" é dirigido exclusivamente a uma ex-namorada de Chico Buarque, sem qualquer conotação política.</div>
+        <div class="opcao" onclick="responder(this, false, 'q1')" data-q="q1"><span class="opcao-letra">B)</span> O "você" representa a censura imposta pela televisão brasileira à MPB na década de 1960.</div>
+        <div class="opcao" onclick="responder(this, true, 'q1')" data-q="q1"><span class="opcao-letra">C)</span> O "você" simula ser um amante autoritário, mas funciona como metáfora da ditadura militar, enganando a censura.</div>
+        <div class="opcao" onclick="responder(this, false, 'q1')" data-q="q1"><span class="opcao-letra">D)</span> O "você" é o próprio Chico Buarque criticando sua geração por aceitar passivamente o regime militar.</div>
+      </div>
+      <div class="ex-feedback" id="fb-q1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="exercicio">
+      <p class="ex-num">Questão 02</p>
+      <p class="ex-pergunta">Na música "Construção" (1971), Chico Buarque utiliza uma estrutura formal inovadora. Qual é a função estética e política dessa escolha formal?</p>
+      <div class="ex-opcoes">
+        <div class="opcao" onclick="responder(this, false, 'q2')" data-q="q2"><span class="opcao-letra">A)</span> A repetição das estrofes com variações visa apenas facilitar a memorização pelo público, sem intenção crítica.</div>
+        <div class="opcao" onclick="responder(this, true, 'q2')" data-q="q2"><span class="opcao-letra">B)</span> A repetição com palavras deslocadas simula a mecanização da vida do operário, cujo destino trágico é invariável.</div>
+        <div class="opcao" onclick="responder(this, false, 'q2')" data-q="q2"><span class="opcao-letra">C)</span> Chico usou a repetição por influência do tropicalismo de Caetano Veloso, sem relação com o conteúdo social.</div>
+        <div class="opcao" onclick="responder(this, false, 'q2')" data-q="q2"><span class="opcao-letra">D)</span> A estrutura repetitiva foi imposta pela gravadora para tornar a música mais comercial e acessível ao rádio.</div>
+      </div>
+      <div class="ex-feedback" id="fb-q2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="exercicio">
+      <p class="ex-num">Questão 03</p>
+      <p class="ex-pergunta">"Cálice" (1973) é proibida pela censura logo após sua composição. Qual recurso linguístico explica por que a música era ao mesmo tempo impossível de proibir e extremamente subversiva?</p>
+      <div class="ex-opcoes">
+        <div class="opcao" onclick="responder(this, false, 'q3')" data-q="q3"><span class="opcao-letra">A)</span> O uso de gírias populares que os censores não compreendiam, tornando o conteúdo indecifrável para o regime.</div>
+        <div class="opcao" onclick="responder(this, false, 'q3')" data-q="q3"><span class="opcao-letra">B)</span> A música foi composta em inglês, idioma não monitorado pela censura brasileira da época.</div>
+        <div class="opcao" onclick="responder(this, false, 'q3')" data-q="q3"><span class="opcao-letra">C)</span> O ritmo de samba tornava a letra irrelevante para os censores, que só analisavam músicas de rock.</div>
+        <div class="opcao" onclick="responder(this, true, 'q3')" data-q="q3"><span class="opcao-letra">D)</span> A homofonia entre "cálice" e "cale-se" e a referência bíblica protegiam a música, pois censurar a Bíblia seria contraditório para o regime.</div>
+      </div>
+      <div class="ex-feedback" id="fb-q3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="exercicio">
+      <p class="ex-num">Questão 04</p>
+      <p class="ex-pergunta">Sobre o contexto histórico das músicas de Chico Buarque analisadas, assinale a alternativa INCORRETA:</p>
+      <div class="ex-opcoes">
+        <div class="opcao" onclick="responder(this, false, 'q4')" data-q="q4"><span class="opcao-letra">A)</span> "Apesar de Você" foi gravada durante o período da ditadura militar brasileira, que durou de 1964 a 1985.</div>
+        <div class="opcao" onclick="responder(this, false, 'q4')" data-q="q4"><span class="opcao-letra">B)</span> "Construção" dialoga com o chamado "milagre econômico" brasileiro, que escondeu a exploração dos trabalhadores.</div>
+        <div class="opcao" onclick="responder(this, true, 'q4')" data-q="q4"><span class="opcao-letra">C)</span> "Cálice" foi composta em 1973 e imediatamente lançada em disco, sendo uma das músicas mais tocadas daquele ano.</div>
+        <div class="opcao" onclick="responder(this, false, 'q4')" data-q="q4"><span class="opcao-letra">D)</span> A censura durante a ditadura brasileira examinava letras de músicas populares em busca de conteúdo subversivo.</div>
+      </div>
+      <div class="ex-feedback" id="fb-q4"></div>
+    </div>
+
+    <!-- Q5 DISSERTATIVA -->
+    <p class="ex-titulo-bloco" style="margin-top:2.5rem;">✎ Questão Dissertativa</p>
+    <div class="exercicio ex-dissertativa">
+      <p class="ex-num">Questão 05 — Redação</p>
+      <p class="ex-pergunta">Com base na análise das três músicas de Chico Buarque ("Apesar de Você", "Construção" e "Cálice"), elabore um parágrafo argumentativo explicando como a linguagem poética funcionou como forma de resistência política durante a ditadura militar brasileira. Utilize pelo menos dois exemplos concretos das músicas estudadas.</p>
+      <textarea placeholder="Escreva sua resposta aqui..."></textarea>
+      <button class="btn-gabarito" onclick="toggleGabarito(this)">Ver gabarito comentado</button>
+      <div class="gabarito-texto">
+        <strong>Gabarito comentado:</strong><br><br>
+        Uma boa resposta deve articular a ideia de que a linguagem poética permitiu a Chico Buarque <strong>dizer o que a censura proibia dizer diretamente</strong>, através de recursos como o duplo sentido, a metáfora e a intertextualidade. Por exemplo, em "Apesar de Você", o pronome "você" funcionava como máscara que escondia — e ao mesmo tempo revelava — a ditadura como destinatário real. Em "Cálice", a homofonia entre a palavra e o imperativo "cale-se" tornava a censura uma armadilha: proibir a música seria proibir uma citação bíblica, o que exporia o regime a uma contradição moral. O aluno também pode citar "Construção" como exemplo de como a forma (a repetição, os adjetivos deslocados) carrega tanto significado político quanto o conteúdo explícito da letra. A conclusão deve apontar que a poesia, ao ser ambígua, <strong>sobrevivia ao aparato de censura</strong> ao mesmo tempo que formava uma consciência coletiva de resistência.
+      </div>
+    </div>
+
+    <!-- PLACAR CHICO -->
+    <div class="placar-wrap" id="placar-chico">
+      <div class="placar-info">
+        <h3>Seu desempenho — Chico Buarque</h3>
+        <p id="txt-placar-chico">Responda as questões para ver sua pontuação</p>
+      </div>
+      <div class="placar-numero" id="num-placar-chico">0/4</div>
+      <button class="btn-resetar" onclick="resetar('chico')">↺ Reiniciar</button>
+    </div>
+  </div>
+</section>
+</div>
+<div class="torn-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CAPÍTULO II — CAZUZA
+══════════════════════════════════════════ -->
+<div class="section-wrapper" id="cazuza">
+<section>
+  <p class="chapter-tag">Capítulo II</p>
+  <h2 class="section-title">Cazuza: Burguesia, Piedade<br>e o Tempo que Não Volta</h2>
+  <p class="section-authors">Autor: Felipe</p>
+  <div class="section-body">
+    <p>Cazuza morreu em 1990, aos 32 anos, com o país ainda aprendendo a respirar democracia. Sua obra é uma autópsia da geração que cresceu sob a ditadura e envelheceu — depressa demais — na redemocratização. Duas músicas concentram esse diagnóstico com precisão clínica: <strong>"Burguesia"</strong> e <strong>"Blues da Piedade"</strong>, ambas do álbum <em>Ideologia</em> (1988).</p>
+  </div>
+
+  <!-- BURGUESIA -->
+  <div class="musica-bloco">
+    <div class="musica-header">
+      <div class="musica-icone">♪</div>
+      <div class="musica-info">
+        <div class="musica-titulo">Burguesia</div>
+        <div class="musica-meta">Cazuza · 1988 · Álbum: Ideologia</div>
+      </div>
+    </div>
+    <div class="musica-corpo">
+      <div class="musica-video">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/PsC5dNOfqDM" allowfullscreen loading="lazy" title="Burguesia - Cazuza"></iframe>
+        </div>
+        <p class="video-label">▶ Assistir no YouTube</p>
+      </div>
+      <div class="musica-analise">
+        <p class="analise-label">✦ Análise da Letra</p>
+        <div class="trecho-letra">"A burguesia tá bem, tá bem,<br>tem clube, tem rodeio,<br>tem panem et circenses,<br>tá tudo, tá tudo bem."</div>
+        <div class="analise-texto">
+          <p>A crítica mais direta que Cazuza fez à classe média brasileira — aquela que prosperou durante a ditadura e continuou prosperando na abertura, <strong>sem qualquer ruptura moral</strong>.</p>
+          <p><strong>"Panem et circenses":</strong> Juvenal no século II d.C. sendo citado num álbum de rock em 1988. Cazuza diz: nada mudou. A classe média ainda se satisfaz com entretenimento enquanto o país sangra. O erudito serve ao popular como sarcasmo.</p>
+          <p><strong>Ironia fria:</strong> Não há raiva explodindo — "tá tudo bem" repetido até virar esvaziamento. Quando tudo está bem, nada está bem.</p>
+          <p><strong>Brasil 1988:</strong> Ano da Constituição Cidadã. O país vivia a euforia da redemocratização, mas as desigualdades estruturais permaneciam intocadas. Cazuza enxergou isso antes da maioria.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLUES DA PIEDADE -->
+  <div class="musica-bloco">
+    <div class="musica-header">
+      <div class="musica-icone">♪</div>
+      <div class="musica-info">
+        <div class="musica-titulo">Blues da Piedade</div>
+        <div class="musica-meta">Cazuza · 1988 · Álbum: Ideologia</div>
+      </div>
+    </div>
+    <div class="musica-corpo">
+      <div class="musica-video">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/9Jj-X0LL4iA" allowfullscreen loading="lazy" title="Blues da Piedade - Cazuza"></iframe>
+        </div>
+        <p class="video-label">▶ Assistir no YouTube</p>
+      </div>
+      <div class="musica-analise">
+        <p class="analise-label">✦ Análise da Letra</p>
+        <div class="trecho-letra">"Que deus nos dê um sol de todo dia,<br>que deus nos dê um sol de primavera.<br>Senhor, dai-nos hoje a euforia<br>e perdoai os fracos porque eles<br>precisam de alegria."</div>
+        <div class="analise-texto">
+          <p>Se "Burguesia" ataca com ironia, "Blues da Piedade" chora com compaixão. A mudança de tom dentro do mesmo álbum é deliberada: as duas músicas precisam uma da outra para completar o diagnóstico.</p>
+          <p><strong>A pietà laica:</strong> Cazuza reescreve o Pai-Nosso para pedir misericórdia aos excluídos. Se há um deus, que explique a miséria. A oração vira acusação.</p>
+          <p><strong>O blues como forma política:</strong> O gênero nasceu da dor negra norte-americana, da escravidão. Cazuza o aplica ao Brasil pobre — criando um parentesco transatlântico entre sofrimentos históricos.</p>
+          <p><strong>Autobiográfico:</strong> Em 1988, já com AIDS diagnosticada, Cazuza cantava sobre os "fracos" de dentro — ele mesmo era um deles. A piedade não é distante; vem de quem também precisava de socorro.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PONTOS / CONTRAPONTOS -->
+  <h3 style="font-family:'Playfair Display',serif; color:var(--papel); font-size:1.4rem; margin:3rem 0 1rem;">Relatório Comparativo — Pontos e Contrapontos</h3>
+  <div class="debate-table">
+    <div class="debate-col">
+      <p class="debate-header">⬛ Burguesia — Pontos</p>
+      <p class="debate-item">Crítica à classe média que colaborou com a ditadura e se adaptou à democracia sem ruptura moral.</p>
+      <p class="debate-item">Ironia como método: "tá tudo bem" repetido até o esvaziamento completo do sentido.</p>
+      <p class="debate-item">Produção sonora pesada (rock) contrastando com conteúdo sobre conforto e comodismo burguês.</p>
+      <p class="debate-item">Referência erudita ("panem et circenses") democratizada pelo rock — erudito servindo ao popular.</p>
+    </div>
+    <div class="debate-col">
+      <p class="debate-header">⬜ Blues da Piedade — Contrapontos</p>
+      <p class="debate-item">A crítica cede espaço à compaixão. Cazuza pede misericórdia para os excluídos — e inclui a si mesmo entre eles.</p>
+      <p class="debate-item">A piedade não é fraqueza: é denúncia. Expõe a crueldade sistêmica com mais força que qualquer panfleto.</p>
+      <p class="debate-item">O blues como forma: ritmo lento, voz rasgada, tradição do sofrimento aplicada ao Brasil pobre.</p>
+      <p class="debate-item">Dimensão autobiográfica: Cazuza já sabia que estava morrendo. A piedade vem de dentro.</p>
+    </div>
+  </div>
+
+  <div class="section-body" style="margin-top:2rem;">
+    <div class="quote-block">
+      <p>"Meu partido é um coração partido. E as ilusões estão todas perdidas. Os meus sonhos foram todos vendidos."</p>
+      <cite>— Cazuza, O Tempo Não Para (1988)</cite>
+    </div>
+    <p>O relatório não anacrônico dessas produções reconhece que Cazuza operava dentro dos limites de sua época. Importar categorias contemporâneas para julgar sua obra seria trair o próprio método crítico que ele exercia — o da <strong>honestidade brutal com o presente</strong>.</p>
+  </div>
+</section>
+</div>
+<div class="torn-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     EXERCÍCIOS — CAZUZA
+══════════════════════════════════════════ -->
+<div class="section-wrapper" id="ex-cazuza">
+<section>
+  <p class="chapter-tag">Exercícios — Capítulo II</p>
+  <h2 class="section-title">Questões sobre<br>Cazuza</h2>
+  <p class="section-authors">Teste seus conhecimentos</p>
+
+  <div class="exercicios-wrap">
+    <p class="ex-titulo-bloco">✎ Questões de Múltipla Escolha</p>
+
+    <!-- Q6 -->
+    <div class="exercicio">
+      <p class="ex-num">Questão 06</p>
+      <p class="ex-pergunta">A expressão "panem et circenses" citada em "Burguesia" (Cazuza, 1988) remete ao poeta romano Juvenal. No contexto da música, essa referência serve para:</p>
+      <div class="ex-opcoes">
+        <div class="opcao" onclick="responder(this, false, 'q6')" data-q="q6"><span class="opcao-letra">A)</span> Demonstrar a erudição de Cazuza e distanciar a música do público popular, criando uma identidade intelectual.</div>
+        <div class="opcao" onclick="responder(this, true, 'q6')" data-q="q6"><span class="opcao-letra">B)</span> Evidenciar que a alienação política pela classe média não é novidade — já existia na Roma Antiga — e o Brasil repete o mesmo padrão.</div>
+        <div class="opcao" onclick="responder(this, false, 'q6')" data-q="q6"><span class="opcao-letra">C)</span> Fazer uma homenagem à cultura clássica europeia como contraponto à superficialidade da cultura brasileira.</div>
+        <div class="opcao" onclick="responder(this, false, 'q6')" data-q="q6"><span class="opcao-letra">D)</span> Citar um autor não monitorado pela censura como forma de introduzir crítica política sem ser identificado.</div>
+      </div>
+      <div class="ex-feedback" id="fb-q6"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="exercicio">
+      <p class="ex-num">Questão 07</p>
+      <p class="ex-pergunta">"Burguesia" e "Blues da Piedade" fazem parte do mesmo álbum ("Ideologia", 1988) e são frequentemente analisadas em conjunto. Qual é a relação estrutural entre as duas músicas?</p>
+      <div class="ex-opcoes">
+        <div class="opcao" onclick="responder(this, false, 'q7')" data-q="q7"><span class="opcao-letra">A)</span> As duas músicas são idênticas em tom e propósito: ambas criticam a burguesia com ironia e distância.</div>
+        <div class="opcao" onclick="responder(this, false, 'q7')" data-q="q7"><span class="opcao-letra">B)</span> "Blues da Piedade" é uma resposta irônica de Cazuza ao sucesso inesperado de "Burguesia" com o público.</div>
+        <div class="opcao" onclick="responder(this, true, 'q7')" data-q="q7"><span class="opcao-letra">C)</span> Formam um díptico: enquanto "Burguesia" ataca com ironia fria quem tem tudo, "Blues da Piedade" chora com compaixão por quem não tem nada.</div>
+        <div class="opcao" onclick="responder(this, false, 'q7')" data-q="q7"><span class="opcao-letra">D)</span> São independentes entre si; a análise conjunta é um equívoco da crítica literária posterior à morte de Cazuza.</div>
+      </div>
+      <div class="ex-feedback" id="fb-q7"></div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="exercicio">
+      <p class="ex-num">Questão 08</p>
+      <p class="ex-pergunta">O conceito de "relatório não anacrônico" usado na análise das músicas de Cazuza significa que o analista deve:</p>
+      <div class="ex-opcoes">
+        <div class="opcao" onclick="responder(this, false, 'q8')" data-q="q8"><span class="opcao-letra">A)</span> Utilizar exclusivamente categorias teóricas contemporâneas para tornar a análise mais relevante ao público atual.</div>
+        <div class="opcao" onclick="responder(this, false, 'q8')" data-q="q8"><span class="opcao-letra">B)</span> Ignorar o contexto histórico das obras e avaliá-las apenas por seu valor musical intrínseco.</div>
+        <div class="opcao" onclick="responder(this, true, 'q8')" data-q="q8"><span class="opcao-letra">C)</span> Analisar as obras dentro dos limites do seu próprio tempo, sem projetar valores e categorias do presente sobre o passado.</div>
+        <div class="opcao" onclick="responder(this, false, 'q8')" data-q="q8"><span class="opcao-letra">D)</span> Comparar Cazuza apenas com artistas contemporâneos a ele, evitando diálogos com autores de outros períodos históricos.</div>
+      </div>
+      <div class="ex-feedback" id="fb-q8"></div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="exercicio">
+      <p class="ex-num">Questão 09</p>
+      <p class="ex-pergunta">A escolha do gênero "blues" em "Blues da Piedade" não é aleatória. Considerando a origem histórica do blues e o contexto da música, assinale a alternativa correta:</p>
+      <div class="ex-opcoes">
+        <div class="opcao" onclick="responder(this, false, 'q9')" data-q="q9"><span class="opcao-letra">A)</span> O blues foi escolhido apenas por sua sonoridade melancólica, sem qualquer intenção de diálogo com a tradição política do gênero.</div>
+        <div class="opcao" onclick="responder(this, false, 'q9')" data-q="q9"><span class="opcao-letra">B)</span> Cazuza escolheu o blues para demonstrar influência da música norte-americana e modernizar o rock brasileiro da época.</div>
+        <div class="opcao" onclick="responder(this, true, 'q9')" data-q="q9"><span class="opcao-letra">C)</span> Ao usar o blues — gênero nascido da dor negra e da escravidão nos EUA —, Cazuza cria um paralelo entre o sofrimento dos excluídos brasileiros e uma tradição histórica de resistência pela arte.</div>
+        <div class="opcao" onclick="responder(this, false, 'q9')" data-q="q9"><span class="opcao-letra">D)</span> O blues é referenciado como ironia: Cazuza critica o gênero como símbolo do imperialismo cultural norte-americano no Brasil.</div>
+      </div>
+      <div class="ex-feedback" id="fb-q9"></div>
+    </div>
+
+    <!-- Q10 DISSERTATIVA -->
+    <p class="ex-titulo-bloco" style="margin-top:2.5rem;">✎ Questão Dissertativa</p>
+    <div class="exercicio ex-dissertativa">
+      <p class="ex-num">Questão 10 — Redação</p>
+      <p class="ex-pergunta">Considerando as músicas "Burguesia" e "Blues da Piedade" de Cazuza, escreva um texto dissertativo-argumentativo explicando como as duas músicas se complementam para construir uma crítica social completa do Brasil de 1988. Discuta: (a) o papel da ironia em "Burguesia"; (b) o papel da compaixão em "Blues da Piedade"; e (c) o que a leitura conjunta revela sobre a visão de Cazuza sobre as desigualdades brasileiras.</p>
+      <textarea placeholder="Escreva sua resposta aqui..."></textarea>
+      <button class="btn-gabarito" onclick="toggleGabarito(this)">Ver gabarito comentado</button>
+      <div class="gabarito-texto">
+        <strong>Gabarito comentado:</strong><br><br>
+        Uma resposta completa deve articular três eixos:<br><br>
+        <strong>(a) Ironia em "Burguesia":</strong> Cazuza descreve com frieza calculada o conforto da classe média — clubes, rodeios, entretenimento —, usando a repetição de "tá tudo bem" como esvaziamento progressivo de sentido. A ironia não é raivosa; é clínica. A referência ao "panem et circenses" latino amplia temporalmente a crítica: a alienação da burguesia não é uma novidade do Brasil pós-ditadura.<br><br>
+        <strong>(b) Compaixão em "Blues da Piedade":</strong> A música inverte o ângulo — agora o olhar é para os de baixo, os "fracos" que precisam de alegria. Cazuza reescreve a oração cristã para pedir misericórdia por quem o sistema esqueceu. A dimensão autobiográfica é fundamental: o próprio Cazuza, doente de AIDS em 1988, inclui-se entre aqueles que precisam de piedade.<br><br>
+        <strong>(c) Leitura conjunta:</strong> As duas músicas formam um retrato social completo do Brasil de 1988 — o país que vivia a euforia da Constituição Cidadã enquanto mantinha estruturas profundas de exclusão. "Burguesia" mostra quem tem e não enxerga; "Blues da Piedade" mostra quem não tem e não é enxergado. A crítica de Cazuza não é anacrônica porque parte de sua experiência concreta naquele momento histórico específico.
+      </div>
+    </div>
+
+    <!-- PLACAR CAZUZA -->
+    <div class="placar-wrap" id="placar-cazuza">
+      <div class="placar-info">
+        <h3>Seu desempenho — Cazuza</h3>
+        <p id="txt-placar-cazuza">Responda as questões para ver sua pontuação</p>
+      </div>
+      <div class="placar-numero" id="num-placar-cazuza">0/4</div>
+      <button class="btn-resetar" onclick="resetar('cazuza')">↺ Reiniciar</button>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>
+  <p class="footer-title">Contra Cultura</p>
+  <p>Antologia Poética e Cultural · Projeto Acadêmico · 2024</p>
+  <p style="margin-top:0.5rem;">Felipe</p>
+</footer>
+
+<script>
+  // Estado
+  const estado = {
+    chico: { acertos: 0, respondidas: new Set() },
+    cazuza: { acertos: 0, respondidas: new Set() }
+  };
+
+  const feedbacks = {
+    q1: { certa: 'C', texto: { certo: '✓ Correto! O duplo sentido era a principal estratégia de sobrevivência da MPB sob censura. O regime interpretou a música como uma simples canção de amor — tarde demais.', errado: '✗ Incorreto. A resposta correta é C. O "você" funcionava como metáfora da ditadura, enganando os censores que o leram como referência a um relacionamento amoroso.' }},
+    q2: { certa: 'B', texto: { certo: '✓ Correto! A forma é o conteúdo em "Construção": repetir até morrer é a própria condição do operário no modelo de desenvolvimento econômico da ditadura.', errado: '✗ Incorreto. A resposta correta é B. A repetição estrutural da música espelha a repetição mecanizada da vida do trabalhador — uma escolha estética e política inseparável.' }},
+    q3: { certa: 'D', texto: { certo: '✓ Correto! A homofonia "cálice/cale-se" é um dos recursos mais engenhosos da MPB de resistência. Censurar a música seria, implicitamente, censurar as Escrituras.', errado: '✗ Incorreto. A resposta correta é D. O jogo sonoro entre "cálice" e "cale-se", combinado à referência bíblica, criava uma armadilha perfeita para a censura.' }},
+    q4: { certa: 'C', texto: { certo: '✓ Correto! Essa afirmação é FALSA: "Cálice" foi composta em 1973 mas ficou proibida e só foi gravada e lançada em 1978 — cinco anos depois.', errado: '✗ Incorreto. A alternativa C é a incorreta: "Cálice" não foi imediatamente lançada — ficou proibida de 1973 a 1978.' }},
+    q6: { certa: 'B', texto: { certo: '✓ Correto! Cazuza usa Juvenal para ampliar historicamente a crítica: a alienação pela distração (pão e circo) não é exclusividade do Brasil — é uma estratégia de dominação milenar.', errado: '✗ Incorreto. A resposta correta é B. O latim serve para mostrar que a estratégia de distrair o povo com entretenimento é antiga — e ainda funciona.' }},
+    q7: { certa: 'C', texto: { certo: '✓ Correto! As duas músicas formam um díptico que, juntas, constroem um retrato social completo: quem tem tudo e não enxerga, e quem não tem nada e não é enxergado.', errado: '✗ Incorreto. A resposta correta é C. A complementaridade das músicas é uma escolha deliberada de Cazuza para construir uma crítica social que abrange os dois extremos da sociedade.' }},
+    q8: { certa: 'C', texto: { certo: '✓ Correto! Análise não anacrônica significa respeitar o tempo histórico da obra — não projetar sobre ela categorias que o autor não conhecia nem poderia conhecer.', errado: '✗ Incorreto. A resposta correta é C. Anacronismo seria julgar Cazuza pelos padrões do presente, o que distorceria a compreensão de sua obra no contexto em que foi criada.' }},
+    q9: { certa: 'C', texto: { certo: '✓ Correto! Ao escolher o blues — gênero historicamente ligado à dor negra e à escravidão —, Cazuza insere os excluídos brasileiros numa tradição global de resistência pela arte.', errado: '✗ Incorreto. A resposta correta é C. O blues não é escolha aleatória: carrega uma tradição histórica de transformar sofrimento em arte, que Cazuza aplica ao contexto brasileiro.' }}
+  };
+
+  const mapQ = { q1:'chico', q2:'chico', q3:'chico', q4:'chico', q6:'cazuza', q7:'cazuza', q8:'cazuza', q9:'cazuza' };
+
+  function responder(el, correta, qid) {
+    const secao = mapQ[qid];
+    if (estado[secao].respondidas.has(qid)) return;
+    estado[secao].respondidas.add(qid);
+
+    const todas = el.parentElement.querySelectorAll('.opcao');
+    todas.forEach(o => o.classList.add('desabilitada'));
+
+    const fb = document.getElementById('fb-' + qid);
+    const letra = el.querySelector('.opcao-letra').textContent.replace(')','');
+
+    if (correta) {
+      el.classList.add('correta');
+      fb.classList.add('acerto');
+      fb.innerHTML = feedbacks[qid].texto.certo;
+      estado[secao].acertos++;
+    } else {
+      el.classList.add('errada');
+      fb.classList.add('erro');
+      fb.innerHTML = feedbacks[qid].texto.errado;
+      // Destacar a correta
+      todas.forEach(o => {
+        if (o.querySelector('.opcao-letra').textContent.startsWith(feedbacks[qid].certa)) {
+          o.classList.add('correta');
+          o.classList.remove('desabilitada');
+        }
+      });
+    }
+    fb.classList.add('visivel');
+    atualizarPlacar(secao);
+  }
+
+  function atualizarPlacar(secao) {
+    const total = Object.keys(mapQ).filter(q => mapQ[q] === secao).length;
+    const { acertos, respondidas } = estado[secao];
+    const r = [...respondidas].filter(q => mapQ[q] === secao).length;
+    document.getElementById('num-placar-' + secao).textContent = acertos + '/' + r;
+    if (r === total) {
+      const pct = Math.round((acertos / total) * 100);
+      let msg = pct >= 75 ? '🎉 Excelente! Domínio sólido do conteúdo.' : pct >= 50 ? '👍 Bom progresso! Revise os pontos errados.' : '📖 Revise as análises e tente novamente.';
+      document.getElementById('txt-placar-' + secao).textContent = msg;
+      document.getElementById('num-placar-' + secao).style.color = pct >= 75 ? 'var(--verde)' : pct >= 50 ? 'var(--ouro)' : 'var(--vermelho)';
+    } else {
+      document.getElementById('txt-placar-' + secao).textContent = r + ' de ' + total + ' questões respondidas';
+    }
+  }
+
+  function resetar(secao) {
+    estado[secao] = { acertos: 0, respondidas: new Set() };
+    const qs = Object.keys(mapQ).filter(q => mapQ[q] === secao);
+    qs.forEach(qid => {
+      const fb = document.getElementById('fb-' + qid);
+      if (fb) { fb.className = 'ex-feedback'; fb.innerHTML = ''; }
+      const opcoes = document.querySelectorAll('[data-q="' + qid + '"]');
+      opcoes.forEach(o => { o.className = 'opcao'; o.setAttribute('onclick', 'responder(this,' + (o.classList.contains('correta') ? 'true' : 'false') + ',"' + qid + '")'); });
+    });
+    // Re-bind onclick baseado nos feedbacks
+    qs.forEach(qid => {
+      const letra_certa = feedbacks[qid].certa;
+      document.querySelectorAll('[data-q="' + qid + '"]').forEach(o => {
+        const letra = o.querySelector('.opcao-letra').textContent.replace(')','');
+        const eh_certa = letra === letra_certa;
+        o.className = 'opcao';
+        o.onclick = function(){ responder(this, eh_certa, qid); };
+      });
+    });
+    document.getElementById('num-placar-' + secao).textContent = '0/4';
+    document.getElementById('num-placar-' + secao).style.color = 'var(--vermelho)';
+    document.getElementById('txt-placar-' + secao).textContent = 'Responda as questões para ver sua pontuação';
+  }
+
+  function toggleGabarito(btn) {
+    const g = btn.nextElementSibling;
+    const vis = g.classList.toggle('visivel');
+    btn.textContent = vis ? 'Ocultar gabarito' : 'Ver gabarito comentado';
+  }
+</script>
+</body>
+</html>
